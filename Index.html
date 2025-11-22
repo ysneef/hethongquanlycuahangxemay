@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Cửa Hàng</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 ô trên 1 hàng */
+            gap: 20px; /* khoảng cách giữa các ô */
+            padding: 20px;
+        }
+
+        .menu-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            background: #f0f0f0;
+        }
+
+        .menu-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .menu-card h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .menu-card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .sales { --color: #FF6B6B; }
+        .warehouse { --color: #4ECDC4; }
+        .cashier { --color: #45B7D1; }
+        .management { --color: #FFA07A; }
+
+        .menu-card.sales:hover { border-top: 5px solid var(--color); }
+        .menu-card.warehouse:hover { border-top: 5px solid var(--color); }
+        .menu-card.cashier:hover { border-top: 5px solid var(--color); }
+        .menu-card.management:hover { border-top: 5px solid var(--color); }
+
+        .menu-card.sales .menu-icon { color: #FF6B6B; }
+        .menu-card.warehouse .menu-icon { color: #4ECDC4; }
+        .menu-card.cashier .menu-icon { color: #45B7D1; }
+        .menu-card.management .menu-icon { color: #FFA07A; }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏪 Hệ Thống Quản Lý Cửa Hàng</h1>
+            <p>Chọn chức năng bạn muốn sử dụng</p>
+        </header>
+
+        <div class="menu-grid">
+            <div class="menu-card sales" onclick="navigateTo('BH.html')">
+                <div class="menu-icon">📊</div>
+                <h2>Quản Lý Bán Hàng</h2>
+                <p>Theo dõi đơn hàng, doanh thu và báo cáo bán hàng chi tiết</p>
+            </div>
+
+            <div class="menu-card warehouse" onclick="navigateTo('KHO.html')">
+                <div class="menu-icon">📦</div>
+                <h2>Quản Lý Kho</h2>
+                <p>Kiểm soát hàng tồn kho, nhập xuất hàng và kiểm kê</p>
+            </div>
+
+            <div class="menu-card cashier" onclick="navigateTo('THU.html')">
+                <div class="menu-icon">💰</div>
+                <h2>Thu Ngân</h2>
+                <p>Xử lý thanh toán, in hóa đơn và quản lý giao dịch</p>
+            </div>
+
+            <div class="menu-card management" onclick="navigateTo('CH.html')">
+                <div class="menu-icon">⚙️</div>
+                <h2>Quản Lý Cửa Hàng</h2>
+                <p>Cài đặt hệ thống, quản lý nhân viên và cấu hình</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Hệ Thống Quản Lý Cửa Hàng - Phiên bản 1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        // Thêm hiệu ứng loading khi trang tải
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.menu-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

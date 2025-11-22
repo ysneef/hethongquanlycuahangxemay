@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Kho Xe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+        }
+        
+        .menu {
+            display: flex;
+            gap: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        
+        .menu-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .menu-btn.active {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
+        }
+        
+        .content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .alert.show {
+            display: block;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .file-upload {
+            border: 2px dashed #667eea;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .file-upload:hover {
+            background: #f0f4ff;
+        }
+        
+        .file-list {
+            margin-top: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-draft {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .status-pending {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .status-complete {
+            background: #28a745;
+            color: white;
+        }
+        
+        .vehicle-list {
+            margin-top: 20px;
+        }
+        
+        .vehicle-item {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .coming-soon h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Hệ Thống Quản Lý Kho Xe</h1>
+        </header>
+        
+        <div class="menu">
+            <button class="menu-btn active" onclick="showSection('nhap-xe')">📥 Nhập xe vào kho</button>
+            <button class="menu-btn" onclick="showSection('xuat-xe')">📤 Xuất xe khỏi kho</button>
+            <button class="menu-btn" onclick="showSection('kiem-ke')">📊 Kiểm kê và theo dõi tồn kho</button>
+            <button class="menu-btn" onclick="showSection('bao-cao')">📈 Báo cáo và dự báo kho</button>
+        </div>
+        
+        <div class="content">
+            <!-- NHẬP XE VÀO KHO -->
+            <div id="nhap-xe" class="section active">
+                <h2>📥 Nhập Xe Vào Kho</h2>
+                
+                <div class="alert alert-warning" id="documentAlert">
+                    ⚠️ Vui lòng đính kèm đầy đủ chứng từ trước khi gửi duyệt!
+                </div>
+                
+                <div class="alert alert-error" id="errorAlert"></div>
+                <div class="alert alert-success" id="successAlert"></div>
+                
+                <!-- Bước 1: Tạo phiếu nhập -->
+                <div class="form-section">
+                    <h3>1. Tạo Phiếu Nhập Xe Mới</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Chọn Kho *</label>
+                            <select id="warehouse" required>
+                                <option value="">-- Chọn kho --</option>
+                                <option value="kho-hcm">Kho TP.HCM</option>
+                                <option value="kho-hn">Kho Hà Nội</option>
+                                <option value="kho-dn">Kho Đà Nẵng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nhà Cung Cấp/Đơn Vị Giao *</label>
+                            <input type="text" id="supplier" placeholder="Nhập tên nhà cung cấp" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Số Phiếu *</label>
+                            <input type="text" id="receiptNumber" placeholder="Ví dụ: PN-2025-001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày Nhập *</label>
+                            <input type="date" id="receiptDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng Thái Phiếu</label>
+                        <select id="receiptStatus">
+                            <option value="draft">Nháp</option>
+                            <option value="pending">Chưa xác nhận</option>
+                        </select>
+                        <span class="status-badge status-draft" id="statusBadge">Nháp</span>
+                    </div>
+                </div>
+                
+                <!-- Bước 2: Nhập thông tin xe -->
+                <div class="form-section">
+                    <h3>2. Nhập Thông Tin Chi Tiết Xe</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Hãng Xe *</label>
+                            <select id="brand" required>
+                                <option value="">-- Chọn hãng --</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="honda">Honda</option>
+                                <option value="mazda">Mazda</option>
+                                <option value="hyundai">Hyundai</option>
+                                <option value="kia">KIA</option>
+                                <option value="ford">Ford</option>
+                                <option value="vinfast">VinFast</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dòng Xe *</label>
+                            <input type="text" id="model" placeholder="Ví dụ: Vios, City, CX-5" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Màu Sắc *</label>
+                            <input type="text" id="color" placeholder="Ví dụ: Trắng ngọc trai" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phiên Bản *</label>
+                            <input type="text" id="version" placeholder="Ví dụ: 1.5G CVT" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Số VIN (17 ký tự) *</label>
+                            <input type="text" id="vin" placeholder="Ví dụ: JTNK4RBE1A3123456" maxlength="17" required>
+                            <small style="color: #666;">VIN phải có đúng 17 ký tự</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Số Máy *</label>
+                            <input type="text" id="engineNumber" placeholder="Nhập số máy" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Biển Số</label>
+                        <input type="text" id="plateNumber" placeholder="Ví dụ: 51A-12345">
+                    </div>
+                    
+                    <h4 style="margin-top: 20px; color: #667eea;">Chi Phí Liên Quan</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Giá Mua (VNĐ) *</label>
+                            <input type="number" id="purchasePrice" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Thuế (VNĐ)</label>
+                            <input type="number" id="tax" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Phí Vận Chuyển (VNĐ)</label>
+                            <input type="number" id="shippingFee" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Vị Trí Kho Lưu</label>
+                        <input type="text" id="storageLocation" placeholder="Ví dụ: Khu A - Dãy 1 - Vị trí 15">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="addVehicle()">➕ Thêm Xe Vào Phiếu</button>
+                </div>
+                
+                <!-- Danh sách xe đã thêm -->
+                <div id="vehicleListSection" style="display: none;">
+                    <h3>Danh Sách Xe Đã Thêm</h3>
+                    <div class="vehicle-list" id="vehicleList"></div>
+                </div>
+                
+                <!-- Bước 3: Đính kèm chứng từ -->
+                <div class="form-section">
+                    <h3>3. Đính Kèm Chứng Từ Nguồn Gốc</h3>
+                    <p style="margin-bottom: 15px; color: #666;">
+                        <strong>Chứng từ bắt buộc:</strong> Hợp đồng/Hóa đơn mua xe, Biên bản giao nhận, Giấy tờ liên quan (PDF/JPG)
+                    </p>
+                    
+                    <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                        <p>📎 Nhấp để tải lên chứng từ</p>
+                        <small>Hỗ trợ: PDF, JPG, PNG (Tối đa 5MB/file)</small>
+                    </div>
+                    <input type="file" id="fileInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleFileUpload(event)">
+                    
+                    <div class="file-list" id="fileList"></div>
+                    
+                    <div style="margin-top: 15px;">
+                        <strong>Trạng thái chứng từ: </strong>
+                        <span class="status-badge status-draft" id="documentStatus">Chưa đầy đủ</span>
+                    </div>
+                </div>
+                
+                <!-- Nút hành động -->
+                <div class="btn-actions">
+                    <button class="btn btn-primary" onclick="saveDraft()">💾 Lưu Nháp</button>
+                    <button class="btn btn-success" onclick="submitForApproval()" id="submitBtn" disabled>✓ Gửi Duyệt</button>
+                    <button class="btn btn-secondary" onclick="resetForm()">↻ Làm Mới</button>
+                </div>
+            </div>
+            
+            <!-- XUẤT XE KHỎI KHO -->
+            <div id="xuat-xe" class="section">
+                <h2>📤 Xuất Xe Khỏi Kho</h2>
+                
+                <div class="alert alert-warning" id="exportDocumentAlert">
+                    ⚠️ Vui lòng đính kèm đầy đủ chứng từ trước khi gửi duyệt!
+                </div>
+                
+                <div class="alert alert-error" id="exportErrorAlert"></div>
+                <div class="alert alert-success" id="exportSuccessAlert"></div>
+                
+                <!-- Bước 1: Tạo phiếu xuất -->
+                <div class="form-section">
+                    <h3>1. Tạo Phiếu Xuất Xe Mới</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Loại Xuất *</label>
+                            <select id="exportType" required>
+                                <option value="">-- Chọn loại xuất --</option>
+                                <option value="sale">Bán hàng</option>
+                                <option value="transfer">Chuyển chi nhánh</option>
+                                <option value="warranty">Bảo hành</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày Xuất *</label>
+                            <input type="date" id="exportDate" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Số Phiếu Xuất *</label>
+                            <input type="text" id="exportNumber" placeholder="Ví dụ: PX-2025-001" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Người Nhận Xe *</label>
+                            <input type="text" id="receiver" placeholder="Tên người nhận xe" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bước 2: Chọn xe cần xuất -->
+                <div class="form-section">
+                    <h3>2. Chọn Xe Cần Xuất</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tìm Kiếm Xe</label>
+                            <input type="text" id="searchVehicle" placeholder="Nhập VIN hoặc mã xe để tìm kiếm">
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary" onclick="searchVehicleInStock()">🔍 Tìm Kiếm</button>
+                        </div>
+                    </div>
+                    
+                    <div id="searchResult" style="display: none; margin-top: 15px;">
+                        <div class="vehicle-item" id="searchResultItem">
+                            <!-- Kết quả tìm kiếm sẽ hiển thị ở đây -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Danh sách xe đã chọn để xuất -->
+                <div id="exportVehicleListSection" style="display: none;">
+                    <h3>Danh Sách Xe Đã Chọn Để Xuất</h3>
+                    <div class="vehicle-list" id="exportVehicleList"></div>
+                </div>
+                
+                <!-- Bước 3: Nhập thông tin giao xe -->
+                <div class="form-section">
+                    <h3>3. Nhập Thông Tin Giao Xe</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nhân Viên Phụ Trách Giao Xe *</label>
+                            <input type="text" id="deliveryStaff" placeholder="Tên nhân viên giao xe" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Số Điện Thoại *</label>
+                            <input type="tel" id="staffPhone" placeholder="Số điện thoại nhân viên" required>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-top: 20px; color: #667eea;">Kiểm Tra Điều Kiện Giao Xe</h4>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="paymentCheck" style="width: auto;">
+                            Đã thanh toán đầy đủ
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="contractCheck" style="width: auto;">
+                            Hợp đồng hợp lệ
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Ghi Chú</label>
+                        <textarea id="exportNotes" rows="3" placeholder="Ghi chú thêm về việc giao xe"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Bước 4: Đính kèm chứng từ xuất xe -->
+                <div class="form-section">
+                    <h3>4. Đính Kèm Chứng Từ Xuất Xe</h3>
+                    <p style="margin-bottom: 15px; color: #666;">
+                        <strong>Chứng từ bắt buộc:</strong> Hợp đồng bán/chuyển, Hóa đơn, Biên bản bàn giao xe (PDF/JPG)
+                    </p>
+                    
+                    <div class="file-upload" onclick="document.getElementById('exportFileInput').click()">
+                        <p>📎 Nhấp để tải lên chứng từ</p>
+                        <small>Hỗ trợ: PDF, JPG, PNG (Tối đa 5MB/file)</small>
+                    </div>
+                    <input type="file" id="exportFileInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" multiple onchange="handleExportFileUpload(event)">
+                    
+                    <div class="file-list" id="exportFileList"></div>
+                    
+                    <div style="margin-top: 15px;">
+                        <strong>Trạng thái chứng từ: </strong>
+                        <span class="status-badge status-draft" id="exportDocumentStatus">Chưa đầy đủ</span>
+                    </div>
+                </div>
+                
+                <!-- Bước 5: Xác nhận và lưu phiếu xuất -->
+                <div class="form-section">
+                    <h3>5. Xác Nhận và Lưu Phiếu Xuất</h3>
+                    <div class="alert alert-warning" style="display: block;">
+                        ⚠️ Vui lòng kiểm tra kỹ toàn bộ thông tin trước khi gửi duyệt!
+                    </div>
+                    
+                    <div class="btn-actions">
+                        <button class="btn btn-primary" onclick="saveExportDraft()">💾 Lưu Nháp</button>
+                        <button class="btn btn-success" onclick="submitExportForApproval()" id="exportSubmitBtn" disabled>✓ Lưu và Gửi Duyệt</button>
+                        <button class="btn btn-secondary" onclick="resetExportForm()">↻ Làm Mới</button>
+                    </div>
+                </div>
+                
+                <!-- Quản lý phiếu xuất chờ duyệt -->
+                <div class="form-section" style="background: #fff3cd; border-color: #ffc107;">
+                    <h3>6. Quản Lý Kho - Duyệt Phiếu Xuất</h3>
+                    <p style="margin-bottom: 15px; color: #856404;">
+                        <strong>Dành cho Quản lý kho:</strong> Kiểm tra và duyệt các phiếu xuất chờ xử lý
+                    </p>
+                    
+                    <div id="pendingExportList">
+                        <p style="color: #666; text-align: center; padding: 20px;">Chưa có phiếu xuất nào chờ duyệt</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- KIỂM KÊ -->
+            <div id="kiem-ke" class="section">
+                <h2>📊 Kiểm Kê và Theo Dõi Tồn Kho</h2>
+                
+                <div class="alert alert-error" id="inventoryErrorAlert"></div>
+                <div class="alert alert-success" id="inventorySuccessAlert"></div>
+                
+                <!-- Bước 1: Mở màn hình kiểm kê -->
+                <div class="form-section">
+                    <h3>1. Mở Màn Hình Kiểm Kê Kho</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Chọn Chi Nhánh/Khu Vực Kho *</label>
+                            <select id="inventoryWarehouse" onchange="loadInventoryData()">
+                                <option value="">-- Chọn kho --</option>
+                                <option value="kho-hcm">Kho TP.HCM</option>
+                                <option value="kho-hn">Kho Hà Nội</option>
+                                <option value="kho-dn">Kho Đà Nẵng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày Kiểm Kê *</label>
+                            <input type="date" id="inventoryDate">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="loadInventoryData()">📋 Tải Danh Sách Tồn Kho</button>
+                </div>
+                
+                <!-- Danh sách xe tồn kho hiện tại -->
+                <div id="currentStockSection" style="display: none;">
+                    <div class="form-section">
+                        <h3>Danh Sách Xe Tồn Kho Hiện Tại</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                                <thead>
+                                    <tr style="background: #667eea; color: white;">
+                                        <th style="padding: 10px; border: 1px solid #ddd;">STT</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Hãng xe</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Dòng xe</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Màu sắc</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">VIN</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Số máy</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="currentStockTable">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 5px;">
+                            <strong>Tổng số xe trong hệ thống: <span id="systemCount">0</span> xe</strong>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bước 2 & 3: Thực hiện kiểm kê và nhập kết quả -->
+                <div id="inventoryFormSection" style="display: none;">
+                    <div class="form-section">
+                        <h3>2 & 3. Thực Hiện Kiểm Kê và Nhập Kết Quả</h3>
+                        
+                        <div class="form-group">
+                            <label>Số Phiếu Kiểm Kê *</label>
+                            <input type="text" id="inventoryNumber" placeholder="Ví dụ: PKK-2025-001">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Người Kiểm Kê *</label>
+                            <input type="text" id="inventoryStaff" placeholder="Tên nhân viên thực hiện kiểm kê">
+                        </div>
+                        
+                        <h4 style="margin: 20px 0 10px 0; color: #667eea;">Nhập Số Lượng Thực Tế</h4>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #667eea; color: white;">
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Hãng xe</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Dòng xe</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Màu</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">VIN</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Sổ sách</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Thực tế</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Chênh lệch</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Lý do</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryCheckTable">
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 5px;">
+                            <strong>📝 Hướng dẫn:</strong><br>
+                            <small>- Nhập số lượng thực tế đếm được ở cột "Thực tế"</small><br>
+                            <small>- Nếu có chênh lệch, ghi rõ lý do: Mất, Sai lệch chứng từ, Chuyển kho chưa cập nhật, v.v.</small><br>
+                            <small>- Hệ thống tự động tính chênh lệch = Thực tế - Sổ sách</small>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Ghi Chú Chung</label>
+                            <textarea id="inventoryNotes" rows="3" placeholder="Ghi chú về quá trình kiểm kê"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bước 4: Lưu và gửi duyệt -->
+                <div id="inventoryActionsSection" style="display: none;">
+                    <div class="form-section">
+                        <h3>4. Lưu và Gửi Duyệt Phiếu Kiểm Kê</h3>
+                        <div class="alert alert-warning" style="display: block;">
+                            ⚠️ Vui lòng kiểm tra kỹ toàn bộ dữ liệu trước khi gửi duyệt!
+                        </div>
+                        
+                        <div class="btn-actions">
+                            <button class="btn btn-primary" onclick="saveInventoryDraft()">💾 Lưu Nháp</button>
+                            <button class="btn btn-success" onclick="submitInventoryForApproval()">✓ Lưu và Gửi Duyệt</button>
+                            <button class="btn btn-secondary" onclick="resetInventoryForm()">↻ Làm Mới</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bước 5: Quản lý kho duyệt -->
+                <div class="form-section" style="background: #fff3cd; border-color: #ffc107;">
+                    <h3>5. Quản Lý Kho - Duyệt Phiếu Kiểm Kê</h3>
+                    <p style="margin-bottom: 15px; color: #856404;">
+                        <strong>Dành cho Quản lý kho:</strong> Xem và duyệt các phiếu kiểm kê chờ xử lý
+                    </p>
+                    
+                    <div id="pendingInventoryList">
+                        <p style="color: #666; text-align: center; padding: 20px;">Chưa có phiếu kiểm kê nào chờ duyệt</p>
+                    </div>
+                </div>
+                
+                <!-- Bước 6: Xem báo cáo tồn kho -->
+                <div class="form-section">
+                    <h3>6. Xem Báo Cáo Tồn Kho và Lịch Sử Kiểm Kê</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Từ Ngày</label>
+                            <input type="date" id="reportFromDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Đến Ngày</label>
+                            <input type="date" id="reportToDate">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Lọc Theo Chi Nhánh</label>
+                            <select id="reportWarehouse">
+                                <option value="">-- Tất cả --</option>
+                                <option value="kho-hcm">Kho TP.HCM</option>
+                                <option value="kho-hn">Kho Hà Nội</option>
+                                <option value="kho-dn">Kho Đà Nẵng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Lọc Theo Hãng Xe</label>
+                            <select id="reportBrand">
+                                <option value="">-- Tất cả --</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="honda">Honda</option>
+                                <option value="mazda">Mazda</option>
+                                <option value="hyundai">Hyundai</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="btn-actions">
+                        <button class="btn btn-primary" onclick="generateInventoryReport()">📊 Xem Báo Cáo</button>
+                        <button class="btn btn-success" onclick="exportToExcel()">📥 Xuất Excel</button>
+                        <button class="btn btn-secondary" onclick="exportToPDF()">📄 Xuất PDF</button>
+                    </div>
+                    
+                    <div id="reportSection" style="display: none; margin-top: 20px;">
+                        <h4 style="color: #667eea;">Báo Cáo Tồn Kho</h4>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                                <thead>
+                                    <tr style="background: #667eea; color: white;">
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Dòng xe</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Tồn đầu kỳ</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Nhập</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Xuất</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Tồn cuối kỳ</th>
+                                        <th style="padding: 10px; border: 1px solid #ddd;">Chênh lệch KK</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportTable">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- BÁO CÁO -->
+            <div id="bao-cao" class="section">
+                <div class="coming-soon">
+                    <h2>📈 Báo Cáo và Dự Báo Kho</h2>
+                    <p>Chức năng đang phát triển...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let vehicles = [];
+        let uploadedFiles = [];
+        let vinDatabase = []; // Mô phỏng CSDL VIN
+        
+        // Dữ liệu cho xuất xe
+        let exportVehicles = [];
+        let exportFiles = [];
+        let stockVehicles = [
+            { vin: 'JTNK4RBE1A3123456', brand: 'Toyota', model: 'Vios', color: 'Trắng', version: '1.5G CVT', status: 'Còn trong kho', sold: false, warranty: false },
+            { vin: 'MHFGD38608K123789', brand: 'Honda', model: 'City', color: 'Đen', version: 'RS', status: 'Còn trong kho', sold: false, warranty: false },
+            { vin: 'JM3KFBDM1N0123456', brand: 'Mazda', model: 'CX-5', color: 'Đỏ', version: '2.0 Premium', status: 'Còn trong kho', sold: false, warranty: false }
+        ]; // Xe mẫu trong kho
+        let pendingExports = []; // Phiếu xuất chờ duyệt
+        
+        // Set ngày hiện tại
+        document.getElementById('receiptDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('exportDate').value = new Date().toISOString().split('T')[0];
+        
+        // Hiển thị section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Cập nhật danh sách phiếu chờ duyệt khi vào tab xuất xe
+            if (sectionId === 'xuat-xe') {
+                updatePendingExportList();
+            }
+        }
+        
+        // Cập nhật trạng thái phiếu
+        document.getElementById('receiptStatus').addEventListener('change', function() {
+            const badge = document.getElementById('statusBadge');
+            if (this.value === 'draft') {
+                badge.textContent = 'Nháp';
+                badge.className = 'status-badge status-draft';
+            } else {
+                badge.textContent = 'Chưa xác nhận';
+                badge.className = 'status-badge status-pending';
+            }
+        });
+        
+        // Kiểm tra định dạng VIN
+        function validateVIN(vin) {
+            if (vin.length !== 17) {
+                return { valid: false, message: 'VIN phải có đúng 17 ký tự' };
+            }
+            if (!/^[A-HJ-NPR-Z0-9]+$/i.test(vin)) {
+                return { valid: false, message: 'VIN chứa ký tự không hợp lệ (không được chứa I, O, Q)' };
+            }
+            return { valid: true, message: '' };
+        }
+        
+        // Kiểm tra trùng VIN
+        function checkDuplicateVIN(vin) {
+            return vinDatabase.includes(vin);
+        }
+        
+        // Thêm xe vào phiếu
+        function addVehicle() {
+            const vin = document.getElementById('vin').value.trim().toUpperCase();
+            const engineNumber = document.getElementById('engineNumber').value.trim();
+            
+            // Validate VIN
+            const vinCheck = validateVIN(vin);
+            if (!vinCheck.valid) {
+                showAlert('error', vinCheck.message);
+                return;
+            }
+            
+            // Kiểm tra trùng VIN
+            if (checkDuplicateVIN(vin)) {
+                showAlert('error', `❌ Lỗi: VIN "${vin}" đã tồn tại trong cơ sở dữ liệu!`);
+                return;
+            }
+            
+            // Kiểm tra trùng số máy
+            if (vehicles.some(v => v.engineNumber === engineNumber)) {
+                showAlert('error', `❌ Lỗi: Số máy "${engineNumber}" đã được nhập trong phiếu này!`);
+                return;
+            }
+            
+            // Kiểm tra các trường bắt buộc
+            const brand = document.getElementById('brand').value;
+            const model = document.getElementById('model').value.trim();
+            const color = document.getElementById('color').value.trim();
+            const version = document.getElementById('version').value.trim();
+            const purchasePrice = document.getElementById('purchasePrice').value;
+            
+            if (!brand || !model || !color || !version || !vin || !engineNumber || !purchasePrice) {
+                showAlert('error', 'Vui lòng điền đầy đủ các trường bắt buộc (*)');
+                return;
+            }
+            
+            // Thêm xe vào danh sách
+            const vehicle = {
+                brand: brand,
+                model: model,
+                color: color,
+                version: version,
+                vin: vin,
+                engineNumber: engineNumber,
+                plateNumber: document.getElementById('plateNumber').value.trim(),
+                purchasePrice: parseFloat(purchasePrice),
+                tax: parseFloat(document.getElementById('tax').value) || 0,
+                shippingFee: parseFloat(document.getElementById('shippingFee').value) || 0,
+                storageLocation: document.getElementById('storageLocation').value.trim()
+            };
+            
+            vehicles.push(vehicle);
+            vinDatabase.push(vin); // Thêm vào CSDL
+            
+            updateVehicleList();
+            clearVehicleForm();
+            showAlert('success', '✓ Đã thêm xe thành công!');
+        }
+        
+        // Cập nhật danh sách xe
+        function updateVehicleList() {
+            const listSection = document.getElementById('vehicleListSection');
+            const list = document.getElementById('vehicleList');
+            
+            if (vehicles.length > 0) {
+                listSection.style.display = 'block';
+                list.innerHTML = vehicles.map((v, index) => `
+                    <div class="vehicle-item">
+                        <strong>Xe ${index + 1}:</strong> ${v.brand} ${v.model} - ${v.color} - ${v.version}<br>
+                        <small>VIN: ${v.vin} | Số máy: ${v.engineNumber} | Giá: ${v.purchasePrice.toLocaleString('vi-VN')} VNĐ</small>
+                        <button class="btn btn-secondary" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;" onclick="removeVehicle(${index})">Xóa</button>
+                    </div>
+                `).join('');
+            } else {
+                listSection.style.display = 'none';
+            }
+        }
+        
+        // Xóa xe
+        function removeVehicle(index) {
+            const vin = vehicles[index].vin;
+            vinDatabase = vinDatabase.filter(v => v !== vin);
+            vehicles.splice(index, 1);
+            updateVehicleList();
+        }
+        
+        // Xóa form xe
+        function clearVehicleForm() {
+            document.getElementById('brand').value = '';
+            document.getElementById('model').value = '';
+            document.getElementById('color').value = '';
+            document.getElementById('version').value = '';
+            document.getElementById('vin').value = '';
+            document.getElementById('engineNumber').value = '';
+            document.getElementById('plateNumber').value = '';
+            document.getElementById('purchasePrice').value = '';
+            document.getElementById('tax').value = '';
+            document.getElementById('shippingFee').value = '';
+            document.getElementById('storageLocation').value = '';
+        }
+        
+        // Xử lý tải file
+        function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            for (let file of files) {
+                // Kiểm tra định dạng
+                const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    showAlert('error', `File "${file.name}" không đúng định dạng (chỉ chấp nhận PDF, JPG, PNG)`);
+                    continue;
+                }
+                
+                // Kiểm tra kích thước (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showAlert('error', `File "${file.name}" vượt quá 5MB`);
+                    continue;
+                }
+                
+                uploadedFiles.push(file);
+            }
+            
+            updateFileList();
+            checkDocumentCompleteness();
+        }
+        
+        // Cập nhật danh sách file
+        function updateFileList() {
+            const list = document.getElementById('fileList');
+            list.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-item">
+                    <span>📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="removeFile(${index})">Xóa</button>
+                </div>
+            `).join('');
+        }
+        
+        // Xóa file
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileList();
+            checkDocumentCompleteness();
+        }
+        
+        // Kiểm tra chứng từ đầy đủ
+        function checkDocumentCompleteness() {
+            const statusBadge = document.getElementById('documentStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            const alert = document.getElementById('documentAlert');
+            
+            if (uploadedFiles.length >= 2) { // Tối thiểu 2 chứng từ
+                statusBadge.textContent = 'Chứng từ hoàn tất';
+                statusBadge.className = 'status-badge status-complete';
+                submitBtn.disabled = false;
+                alert.classList.remove('show');
+            } else {
+                statusBadge.textContent = 'Chưa đầy đủ';
+                statusBadge.className = 'status-badge status-draft';
+                submitBtn.disabled = true;
+                alert.classList.add('show');
+            }
+        }
+        
+        // Hiển thị thông báo
+        function showAlert(type, message) {
+            const alertBox = document.getElementById(type === 'error' ? 'errorAlert' : 'successAlert');
+            alertBox.textContent = message;
+            alertBox.classList.add('show');
+            
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Lưu nháp
+        function saveDraft() {
+            const warehouse = document.getElementById('warehouse').value;
+            const supplier = document.getElementById('supplier').value;
+            const receiptNumber = document.getElementById('receiptNumber').value;
+            
+            if (!warehouse || !supplier || !receiptNumber) {
+                showAlert('error', 'Vui lòng điền đầy đủ thông tin phiếu nhập');
+                return;
+            }
+            
+            showAlert('success', '✓ Đã lưu phiếu nhập dưới dạng nháp!');
+        }
+        
+        // Gửi duyệt
+        function submitForApproval() {
+            if (vehicles.length === 0) {
+                showAlert('error', 'Vui lòng thêm ít nhất một xe vào phiếu nhập');
+                return;
+            }
+            
+            if (uploadedFiles.length < 2) {
+                showAlert('error', '⚠️ Không thể gửi duyệt: Chứng từ chưa đầy đủ!');
+                return;
+            }
+            
+            showAlert('success', '✓ Phiếu nhập đã được gửi để duyệt thành công!');
+            setTimeout(() => {
+                resetForm();
+            }, 2000);
+        }
+        
+        // Reset form
+        function resetForm() {
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    el.checked = false;
+                } else if (el.type !== 'date') {
+                    el.value = '';
+                }
+            });
+            
+            // Reset lại ngày hiện tại
+            document.getElementById('receiptDate').value = new Date().toISOString().split('T')[0];
+            
+            // Reset trạng thái
+            document.getElementById('receiptStatus').value = 'draft';
+            document.getElementById('statusBadge').textContent = 'Nháp';
+            document.getElementById('statusBadge').className = 'status-badge status-draft';
+            
+            // Xóa danh sách xe và file
+            vehicles = [];
+            uploadedFiles = [];
+            vinDatabase = []; // Reset CSDL VIN
+            
+            updateVehicleList();
+            updateFileList();
+            checkDocumentCompleteness();
+            
+            // Ẩn thông báo
+            document.querySelectorAll('.alert').forEach(alert => alert.classList.remove('show'));
+            
+            showAlert('success', '✓ Đã làm mới form thành công!');
+        }
+        
+        // ============ CHỨC NĂNG XUẤT XE ============
+        
+        // Tìm kiếm xe trong kho
+        function searchVehicleInStock() {
+            const searchTerm = document.getElementById('searchVehicle').value.trim().toUpperCase();
+            
+            if (!searchTerm) {
+                showExportAlert('error', 'Vui lòng nhập VIN hoặc mã xe để tìm kiếm');
+                return;
+            }
+            
+            const vehicle = stockVehicles.find(v => v.vin === searchTerm);
+            
+            if (!vehicle) {
+                showExportAlert('error', `Không tìm thấy xe với VIN/Mã: ${searchTerm}`);
+                document.getElementById('searchResult').style.display = 'none';
+                return;
+            }
+            
+            // Kiểm tra tình trạng xe
+            if (vehicle.sold) {
+                showExportAlert('error', `⚠️ Xe này đã được bán, không thể xuất!`);
+                return;
+            }
+            
+            if (vehicle.warranty) {
+                showExportAlert('error', `⚠️ Xe này đang trong quá trình bảo hành!`);
+                return;
+            }
+            
+            // Hiển thị kết quả
+            const resultDiv = document.getElementById('searchResultItem');
+            resultDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>${vehicle.brand} ${vehicle.model}</strong> - ${vehicle.color} - ${vehicle.version}<br>
+                        <small>VIN: ${vehicle.vin}</small><br>
+                        <small>Tình trạng: <span style="color: #28a745; font-weight: 600;">${vehicle.status}</span></small>
+                    </div>
+                    <button class="btn btn-success" onclick="addVehicleToExport('${vehicle.vin}')">➕ Thêm Vào Phiếu</button>
+                </div>
+            `;
+            document.getElementById('searchResult').style.display = 'block';
+            showExportAlert('success', '✓ Tìm thấy xe! Xe hợp lệ để xuất.');
+        }
+        
+        // Thêm xe vào phiếu xuất
+        function addVehicleToExport(vin) {
+            const vehicle = stockVehicles.find(v => v.vin === vin);
+            
+            // Kiểm tra xe đã có trong danh sách chưa
+            if (exportVehicles.some(v => v.vin === vin)) {
+                showExportAlert('error', 'Xe này đã có trong danh sách xuất!');
+                return;
+            }
+            
+            exportVehicles.push(vehicle);
+            updateExportVehicleList();
+            showExportAlert('success', '✓ Đã thêm xe vào phiếu xuất!');
+            
+            // Xóa kết quả tìm kiếm
+            document.getElementById('searchVehicle').value = '';
+            document.getElementById('searchResult').style.display = 'none';
+        }
+        
+        // Cập nhật danh sách xe xuất
+        function updateExportVehicleList() {
+            const listSection = document.getElementById('exportVehicleListSection');
+            const list = document.getElementById('exportVehicleList');
+            
+            if (exportVehicles.length > 0) {
+                listSection.style.display = 'block';
+                list.innerHTML = exportVehicles.map((v, index) => `
+                    <div class="vehicle-item">
+                        <strong>Xe ${index + 1}:</strong> ${v.brand} ${v.model} - ${v.color} - ${v.version}<br>
+                        <small>VIN: ${v.vin} | Tình trạng: ${v.status}</small>
+                        <button class="btn btn-secondary" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;" onclick="removeExportVehicle(${index})">Xóa</button>
+                    </div>
+                `).join('');
+            } else {
+                listSection.style.display = 'none';
+            }
+        }
+        
+        // Xóa xe khỏi phiếu xuất
+        function removeExportVehicle(index) {
+            exportVehicles.splice(index, 1);
+            updateExportVehicleList();
+        }
+        
+        // Xử lý tải file xuất xe
+        function handleExportFileUpload(event) {
+            const files = Array.from(event.target.files);
+            
+            for (let file of files) {
+                const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                if (!validTypes.includes(file.type)) {
+                    showExportAlert('error', `File "${file.name}" không đúng định dạng`);
+                    continue;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    showExportAlert('error', `File "${file.name}" vượt quá 5MB`);
+                    continue;
+                }
+                
+                exportFiles.push(file);
+            }
+            
+            updateExportFileList();
+            checkExportDocumentCompleteness();
+        }
+        
+        // Cập nhật danh sách file xuất
+        function updateExportFileList() {
+            const list = document.getElementById('exportFileList');
+            list.innerHTML = exportFiles.map((file, index) => `
+                <div class="file-item">
+                    <span>📄 ${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
+                    <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="removeExportFile(${index})">Xóa</button>
+                </div>
+            `).join('');
+        }
+        
+        // Xóa file xuất
+        function removeExportFile(index) {
+            exportFiles.splice(index, 1);
+            updateExportFileList();
+            checkExportDocumentCompleteness();
+        }
+        
+        // Kiểm tra chứng từ xuất đầy đủ
+        function checkExportDocumentCompleteness() {
+            const statusBadge = document.getElementById('exportDocumentStatus');
+            const submitBtn = document.getElementById('exportSubmitBtn');
+            const alert = document.getElementById('exportDocumentAlert');
+            const paymentCheck = document.getElementById('paymentCheck').checked;
+            const contractCheck = document.getElementById('contractCheck').checked;
+            
+            if (exportFiles.length >= 2 && paymentCheck && contractCheck && exportVehicles.length > 0) {
+                statusBadge.textContent = 'Chứng từ hoàn tất';
+                statusBadge.className = 'status-badge status-complete';
+                submitBtn.disabled = false;
+                alert.classList.remove('show');
+            } else {
+                statusBadge.textContent = 'Chưa đầy đủ';
+                statusBadge.className = 'status-badge status-draft';
+                submitBtn.disabled = true;
+                alert.classList.add('show');
+            }
+        }
+        
+        // Theo dõi checkbox
+        document.getElementById('paymentCheck').addEventListener('change', checkExportDocumentCompleteness);
+        document.getElementById('contractCheck').addEventListener('change', checkExportDocumentCompleteness);
+        
+        // Lưu nháp phiếu xuất
+        function saveExportDraft() {
+            const exportType = document.getElementById('exportType').value;
+            const receiver = document.getElementById('receiver').value;
+            const exportNumber = document.getElementById('exportNumber').value;
+            
+            if (!exportType || !receiver || !exportNumber) {
+                showExportAlert('error', 'Vui lòng điền đầy đủ thông tin phiếu xuất');
+                return;
+            }
+            
+            showExportAlert('success', '✓ Đã lưu phiếu xuất dưới dạng nháp!');
+        }
+        
+        // Gửi duyệt phiếu xuất
+        function submitExportForApproval() {
+            if (exportVehicles.length === 0) {
+                showExportAlert('error', 'Vui lòng chọn ít nhất một xe để xuất');
+                return;
+            }
+            
+            if (exportFiles.length < 2) {
+                showExportAlert('error', '⚠️ Không thể gửi duyệt: Chứng từ chưa đầy đủ!');
+                return;
+            }
+            
+            if (!document.getElementById('paymentCheck').checked || !document.getElementById('contractCheck').checked) {
+                showExportAlert('error', '⚠️ Chưa đáp ứng đủ điều kiện giao xe!');
+                return;
+            }
+            
+            // Tạo phiếu xuất chờ duyệt
+            const exportOrder = {
+                id: 'PX-' + Date.now(),
+                exportNumber: document.getElementById('exportNumber').value,
+                exportType: document.getElementById('exportType').value,
+                exportDate: document.getElementById('exportDate').value,
+                receiver: document.getElementById('receiver').value,
+                deliveryStaff: document.getElementById('deliveryStaff').value,
+                vehicles: [...exportVehicles],
+                files: exportFiles.length,
+                status: 'pending',
+                notes: document.getElementById('exportNotes').value
+            };
+            
+            pendingExports.push(exportOrder);
+            updatePendingExportList();
+            
+            showExportAlert('success', '✓ Phiếu xuất đã được gửi để duyệt thành công!');
+            setTimeout(() => {
+                resetExportForm();
+            }, 2000);
+        }
+        
+        // Cập nhật danh sách phiếu chờ duyệt
+        function updatePendingExportList() {
+            const list = document.getElementById('pendingExportList');
+            
+            if (pendingExports.length === 0) {
+                list.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Chưa có phiếu xuất nào chờ duyệt</p>';
+                return;
+            }
+            
+            list.innerHTML = pendingExports.map((order, index) => `
+                <div class="vehicle-item" style="border-left-color: #ffc107;">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <strong>Phiếu: ${order.exportNumber}</strong> <span class="status-badge status-pending">Chờ duyệt</span><br>
+                            <small>Loại: ${getExportTypeName(order.exportType)} | Ngày xuất: ${order.exportDate}</small><br>
+                            <small>Người nhận: ${order.receiver} | NV giao: ${order.deliveryStaff}</small><br>
+                            <small>Số xe: ${order.vehicles.length} | Chứng từ: ${order.files} file</small>
+                        </div>
+                        <div style="display: flex; gap: 5px; flex-direction: column;">
+                            <button class="btn btn-success" style="padding: 8px 15px; font-size: 12px;" onclick="approveExport(${index})">✓ Duyệt</button>
+                            <button class="btn btn-secondary" style="padding: 8px 15px; font-size: 12px;" onclick="rejectExport(${index})">✗ Từ chối</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Lấy tên loại xuất
+        function getExportTypeName(type) {
+            const types = {
+                'sale': 'Bán hàng',
+                'transfer': 'Chuyển chi nhánh',
+                'warranty': 'Bảo hành',
+                'other': 'Khác'
+            };
+            return types[type] || type;
+        }
+        
+        // Duyệt phiếu xuất
+        function approveExport(index) {
+            const order = pendingExports[index];
+            
+            // Cập nhật trạng thái xe trong kho
+            order.vehicles.forEach(v => {
+                const stockVehicle = stockVehicles.find(sv => sv.vin === v.vin);
+                if (stockVehicle) {
+                    if (order.exportType === 'sale') {
+                        stockVehicle.sold = true;
+                        stockVehicle.status = 'Đã bán';
+                    } else if (order.exportType === 'warranty') {
+                        stockVehicle.warranty = true;
+                        stockVehicle.status = 'Đang bảo hành';
+                    } else {
+                        stockVehicle.status = 'Đã xuất kho';
+                    }
+                }
+            });
+            
+            pendingExports.splice(index, 1);
+            updatePendingExportList();
+            showExportAlert('success', `✓ Đã duyệt phiếu xuất ${order.exportNumber}. Tồn kho đã được cập nhật!`);
+        }
+        
+        // Từ chối phiếu xuất
+        function rejectExport(index) {
+            const reason = prompt('Nhập lý do từ chối phiếu xuất:');
+            if (!reason) return;
+            
+            const order = pendingExports[index];
+            pendingExports.splice(index, 1);
+            updatePendingExportList();
+            showExportAlert('error', `✗ Đã từ chối phiếu xuất ${order.exportNumber}. Lý do: ${reason}`);
+        }
+        
+        // Hiển thị thông báo xuất xe
+        function showExportAlert(type, message) {
+            const alertBox = document.getElementById(type === 'error' ? 'exportErrorAlert' : 'exportSuccessAlert');
+            alertBox.textContent = message;
+            alertBox.classList.add('show');
+            
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Reset form xuất xe
+        function resetExportForm() {
+            document.querySelectorAll('#xuat-xe input, #xuat-xe select, #xuat-xe textarea').forEach(el => {
+                if (el.type === 'checkbox') {
+                    el.checked = false;
+                } else if (el.type !== 'date') {
+                    el.value = '';
+                }
+            });
+            
+            document.getElementById('exportDate').value = new Date().toISOString().split('T')[0];
+            
+            exportVehicles = [];
+            exportFiles = [];
+            
+            updateExportVehicleList();
+            updateExportFileList();
+            checkExportDocumentCompleteness();
+            
+            document.getElementById('searchResult').style.display = 'none';
+            document.querySelectorAll('#xuat-xe .alert').forEach(alert => alert.classList.remove('show'));
+        }
+    </script>
+</body>
+</html>

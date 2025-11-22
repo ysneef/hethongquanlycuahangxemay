@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Thu Ngân</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .menu-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            min-width: 200px;
+        }
+
+        .tab-btn:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .tab-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h3::before {
+            content: "●";
+            margin-right: 10px;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .product-list {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .product-item {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .total-amount {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .payment-method-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .payment-option {
+            flex: 1;
+            min-width: 150px;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-option:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .payment-option.selected {
+            border-color: #667eea;
+            background: #e7f0ff;
+        }
+
+        .payment-option input[type="checkbox"] {
+            margin-bottom: 10px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .invoice-card {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .invoice-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .shift-status {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .shift-open {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .shift-closed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .menu-tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                min-width: auto;
+            }
+        }
+
+        .invoice-preview {
+            background: white;
+            border: 2px dashed #667eea;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .change-amount {
+            font-size: 32px;
+            color: #28a745;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            background: #d4edda;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏪 HỆ THỐNG QUẢN LÝ THU NGÂN</h1>
+            <p>Phiên bản 1.0 - Chuyên nghiệp & Hiệu quả</p>
+        </div>
+
+        <div class="menu-tabs">
+            <button class="tab-btn active" onclick="switchTab('sales')">Xử lý Giao dịch Bán hàng</button>
+            <button class="tab-btn" onclick="switchTab('invoices')">Quản lý Hóa đơn</button>
+            <button class="tab-btn" onclick="switchTab('shift')">Mở/Đóng Ca</button>
+            <button class="tab-btn" onclick="switchTab('report')">Báo cáo Thu chi</button>
+        </div>
+
+        <!-- Tab 1: Xử lý Giao dịch Bán hàng -->
+        <div id="sales" class="tab-content active">
+            <div class="form-section">
+                <h3>Bước 1: Xác nhận Hóa đơn</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Mã đơn hàng</label>
+                        <input type="text" id="orderId" placeholder="Nhập mã đơn hàng">
+                    </div>
+                    <div class="form-group">
+                        <label>Mã khách hàng (Tùy chọn)</label>
+                        <input type="text" id="customerId" placeholder="Nhập mã khách hàng">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="loadInvoice()">Tải thông tin hóa đơn</button>
+                
+                <div id="invoiceDetails" style="display:none; margin-top: 20px;">
+                    <div class="alert alert-success">✓ Đã tải thành công thông tin hóa đơn</div>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <span><strong>Sản phẩm A</strong> - SL: 2</span>
+                            <span>500,000 đ</span>
+                        </div>
+                        <div class="product-item">
+                            <span><strong>Sản phẩm B</strong> - SL: 1</span>
+                            <span>300,000 đ</span>
+                        </div>
+                        <div class="product-item">
+                            <span><strong>Dịch vụ C</strong> - SL: 1</span>
+                            <span>200,000 đ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label>Số điện thoại khách hàng thành viên (Để tích điểm)</label>
+                        <input type="text" id="memberPhone" placeholder="Nhập SĐT để tích điểm">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Bước 2: Áp dụng Chính sách & Giảm giá</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Mã khuyến mãi / Voucher</label>
+                        <input type="text" id="promoCode" placeholder="Nhập mã giảm giá">
+                    </div>
+                    <div class="form-group">
+                        <label>Chiết khấu (%)</label>
+                        <input type="number" id="discount" value="0" min="0" max="100" onchange="calculateTotal()">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="applyDiscount()">Áp dụng giảm giá</button>
+                
+                <div class="total-amount" id="totalAmount">
+                    TỔNG TIỀN: 1,000,000 đ
+                </div>
+                <div class="total-amount" id="finalAmount" style="background: #28a745;">
+                    PHẢI THANH TOÁN: 1,000,000 đ
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Bước 3: Chọn Phương thức Thanh toán</h3>
+                <div class="payment-method-group">
+                    <div class="payment-option" onclick="togglePayment('cash')">
+                        <input type="checkbox" id="payCash">
+                        <div>💵 Tiền mặt</div>
+                    </div>
+                    <div class="payment-option" onclick="togglePayment('card')">
+                        <input type="checkbox" id="payCard">
+                        <div>💳 Thẻ</div>
+                    </div>
+                    <div class="payment-option" onclick="togglePayment('transfer')">
+                        <input type="checkbox" id="payTransfer">
+                        <div>🏦 Chuyển khoản</div>
+                    </div>
+                </div>
+
+                <div id="cashInput" style="display:none; margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Số tiền tiền mặt</label>
+                        <input type="number" id="cashAmount" placeholder="Nhập số tiền" onchange="calculateChange()">
+                    </div>
+                    <div class="form-group">
+                        <label>Số tiền khách đưa</label>
+                        <input type="number" id="cashGiven" placeholder="Nhập số tiền khách đưa" onchange="calculateChange()">
+                    </div>
+                    <div id="changeDisplay" class="change-amount" style="display:none;">
+                        TIỀN THỪA: 0 đ
+                    </div>
+                </div>
+
+                <div id="cardInput" style="display:none; margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Số tiền thanh toán bằng thẻ</label>
+                        <input type="number" id="cardAmount" placeholder="Nhập số tiền">
+                    </div>
+                    <div class="form-group">
+                        <label>Mã giao dịch POS</label>
+                        <input type="text" id="posTransaction" placeholder="Nhập mã giao dịch">
+                    </div>
+                </div>
+
+                <div id="transferInput" style="display:none; margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Số tiền chuyển khoản</label>
+                        <input type="number" id="transferAmount" placeholder="Nhập số tiền">
+                    </div>
+                    <div class="form-group">
+                        <label>Mã giao dịch chuyển khoản</label>
+                        <input type="text" id="transferTransaction" placeholder="Nhập mã giao dịch">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Bước 4: Hoàn tất Giao dịch & In Hóa đơn</h3>
+                <button class="btn btn-success" onclick="completeTransaction()" style="font-size: 18px; padding: 15px 40px;">
+                    ✓ HOÀN TẤT THANH TOÁN
+                </button>
+                <button class="btn btn-secondary" onclick="resetTransaction()">↺ Làm mới</button>
+                
+                <div id="invoicePreview" style="display:none;" class="invoice-preview">
+                    <h2 style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px;">HÓA ĐƠN BÁN HÀNG</h2>
+                    <p>Mã đơn: <strong id="invOrderId"></strong></p>
+                    <p>Ngày: <strong id="invDate"></strong></p>
+                    <p>Thu ngân: <strong>Nguyễn Văn A</strong></p>
+                    <hr>
+                    <div id="invProducts"></div>
+                    <hr>
+                    <p>Tổng tiền: <strong id="invTotal"></strong></p>
+                    <p>Giảm giá: <strong id="invDiscount"></strong></p>
+                    <p style="font-size: 18px;">THÀNH TIỀN: <strong id="invFinal"></strong></p>
+                    <p>Phương thức: <strong id="invMethod"></strong></p>
+                    <hr>
+                    <p style="text-align: center; margin-top: 20px;">Cảm ơn quý khách!</p>
+                    <button class="btn btn-primary" onclick="window.print()" style="margin-top: 20px;">🖨️ In hóa đơn</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Quản lý Hóa đơn -->
+        <div id="invoices" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Quản lý Hóa đơn/Giao dịch</h2>
+            
+            <!-- Phần Tìm kiếm -->
+            <div class="form-section">
+                <h3>Tìm kiếm Hóa đơn</h3>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Mã hóa đơn</label>
+                        <input type="text" id="searchInvoiceId" placeholder="Nhập mã hóa đơn">
+                    </div>
+                    <div class="form-group">
+                        <label>Tên khách hàng</label>
+                        <input type="text" id="searchCustomerName" placeholder="Nhập tên khách hàng">
+                    </div>
+                    <div class="form-group">
+                        <label>Biển số xe</label>
+                        <input type="text" id="searchLicensePlate" placeholder="Nhập biển số xe">
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <select id="searchStatus">
+                            <option value="">Tất cả</option>
+                            <option value="paid">Đã thanh toán</option>
+                            <option value="unpaid">Chưa thanh toán</option>
+                            <option value="refund">Đã hoàn tiền</option>
+                            <option value="cancelled">Đã hủy</option>
+                            <option value="pending">Chờ phê duyệt</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Từ ngày</label>
+                        <input type="date" id="searchFromDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Đến ngày</label>
+                        <input type="date" id="searchToDate">
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="searchInvoices()">🔍 Tìm kiếm</button>
+                    <button class="btn btn-secondary" onclick="resetSearch()">↺ Làm mới</button>
+                </div>
+            </div>
+
+            <!-- Phần Danh sách -->
+            <div class="form-section">
+                <h3>Danh sách Hóa đơn</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: 600; margin-right: 10px;">Sắp xếp theo:</label>
+                    <select id="sortBy" onchange="sortInvoices()" style="padding: 8px; border-radius: 5px; border: 2px solid #dee2e6;">
+                        <option value="date-desc">Ngày (Mới nhất)</option>
+                        <option value="date-asc">Ngày (Cũ nhất)</option>
+                        <option value="amount-desc">Số tiền (Cao đến thấp)</option>
+                        <option value="amount-asc">Số tiền (Thấp đến cao)</option>
+                    </select>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Ngày giờ</th>
+                            <th>Khách hàng</th>
+                            <th>Biển số xe</th>
+                            <th>Tổng tiền</th>
+                            <th>Người tạo</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceList">
+                        <tr>
+                            <td>DH001</td>
+                            <td>22/11/2025 10:30</td>
+                            <td>Nguyễn Văn B</td>
+                            <td>30A-12345</td>
+                            <td>1,000,000 đ</td>
+                            <td>Thu ngân A</td>
+                            <td><span class="shift-open">Đã thanh toán</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="viewInvoiceDetail('DH001')" style="padding: 8px 15px;">Xem</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DH002</td>
+                            <td>22/11/2025 11:15</td>
+                            <td>Trần Thị C</td>
+                            <td>29B-67890</td>
+                            <td>750,000 đ</td>
+                            <td>Thu ngân B</td>
+                            <td><span class="shift-open">Đã thanh toán</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="viewInvoiceDetail('DH002')" style="padding: 8px 15px;">Xem</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>DH003</td>
+                            <td>21/11/2025 14:20</td>
+                            <td>Lê Văn D</td>
+                            <td>51C-11111</td>
+                            <td>500,000 đ</td>
+                            <td>Thu ngân A</td>
+                            <td><span class="shift-closed">Chưa thanh toán</span></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="viewInvoiceDetail('DH003')" style="padding: 8px 15px;">Xem</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Modal Chi tiết Hóa đơn -->
+        <div id="invoiceDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;">
+            <div style="max-width: 900px; margin: 30px auto; background: white; border-radius: 15px; padding: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <h2>Chi tiết Hóa đơn</h2>
+                    <button onclick="closeInvoiceDetail()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #666;">×</button>
+                </div>
+
+                <div class="form-section">
+                    <h3>Thông tin Hóa đơn</h3>
+                    <div class="grid-2">
+                        <div>
+                            <p><strong>Mã hóa đơn:</strong> <span id="detailInvoiceId">DH001</span></p>
+                            <p><strong>Ngày tạo:</strong> <span id="detailDate">22/11/2025 10:30</span></p>
+                            <p><strong>Người tạo:</strong> <span id="detailCreator">Thu ngân A</span></p>
+                        </div>
+                        <div>
+                            <p><strong>Trạng thái:</strong> <span class="shift-open" id="detailStatus">Đã thanh toán</span></p>
+                            <p><strong>Số lần in:</strong> <span id="detailPrintCount">1</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Thông tin Khách hàng</h3>
+                    <p><strong>Tên:</strong> <span id="detailCustomerName">Nguyễn Văn B</span></p>
+                    <p><strong>SĐT:</strong> <span id="detailCustomerPhone">0901234567</span></p>
+                    <p><strong>Biển số xe:</strong> <span id="detailLicensePlate">30A-12345</span></p>
+                </div>
+
+                <div class="form-section">
+                    <h3>Chi tiết Sản phẩm/Dịch vụ</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailProductList">
+                            <tr>
+                                <td>Rửa xe ô tô</td>
+                                <td>1</td>
+                                <td>100,000 đ</td>
+                                <td>100,000 đ</td>
+                            </tr>
+                            <tr>
+                                <td>Đánh bóng</td>
+                                <td>1</td>
+                                <td>500,000 đ</td>
+                                <td>500,000 đ</td>
+                            </tr>
+                            <tr>
+                                <td>Phủ ceramic</td>
+                                <td>1</td>
+                                <td>400,000 đ</td>
+                                <td>400,000 đ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="text-align: right; margin-top: 15px; font-size: 16px;">
+                        <p><strong>Tạm tính:</strong> <span id="detailSubtotal">1,000,000 đ</span></p>
+                        <p><strong>Giảm giá:</strong> <span id="detailDiscount">0 đ</span></p>
+                        <p><strong>Thuế VAT (10%):</strong> <span id="detailTax">100,000 đ</span></p>
+                        <p style="font-size: 20px; color: #667eea;"><strong>TỔNG CỘNG:</strong> <span id="detailTotal">1,100,000 đ</span></p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Phương thức Thanh toán</h3>
+                    <p id="detailPaymentMethod">Tiền mặt: 1,100,000 đ</p>
+                </div>
+
+                <div class="form-section">
+                    <h3>Lịch sử Thao tác</h3>
+                    <div id="detailHistory">
+                        <p>• 22/11/2025 10:30 - Tạo hóa đơn bởi Thu ngân A</p>
+                        <p>• 22/11/2025 10:35 - Thanh toán thành công</p>
+                        <p>• 22/11/2025 10:36 - In hóa đơn lần 1</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="printInvoiceAgain()">🖨️ In lại Hóa đơn</button>
+                    <button class="btn btn-success" onclick="processPayment()" id="btnPayNow" style="display: none;">💰 Thanh toán</button>
+                    <button class="btn btn-danger" onclick="showRefundModal()">↩️ Yêu cầu Hoàn tiền</button>
+                    <button class="btn btn-danger" onclick="showCancelModal()">❌ Hủy Hóa đơn</button>
+                    <button class="btn btn-secondary" onclick="closeInvoiceDetail()">Đóng</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Hoàn tiền -->
+        <div id="refundModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001;">
+            <div style="max-width: 600px; margin: 100px auto; background: white; border-radius: 15px; padding: 30px;">
+                <h2 style="margin-bottom: 20px;">Yêu cầu Hoàn tiền</h2>
+                <div class="form-group">
+                    <label>Lý do hoàn tiền</label>
+                    <select id="refundReason" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                        <option value="">-- Chọn lý do --</option>
+                        <option value="customer-change">Khách hàng đổi ý</option>
+                        <option value="wrong-service">Nhập sai dịch vụ</option>
+                        <option value="payment-error">Thanh toán nhầm</option>
+                        <option value="technical-error">Lỗi kỹ thuật</option>
+                        <option value="other">Lý do khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú chi tiết</label>
+                    <textarea id="refundNote" rows="4" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;" placeholder="Nhập chi tiết lý do hoàn tiền..."></textarea>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-danger" onclick="submitRefundRequest()">Xác nhận Hoàn tiền</button>
+                    <button class="btn btn-secondary" onclick="closeRefundModal()">Hủy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Hủy hóa đơn -->
+        <div id="cancelModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001;">
+            <div style="max-width: 600px; margin: 100px auto; background: white; border-radius: 15px; padding: 30px;">
+                <h2 style="margin-bottom: 20px;">Hủy Hóa đơn</h2>
+                <div class="form-group">
+                    <label>Lý do hủy</label>
+                    <select id="cancelReason" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;">
+                        <option value="">-- Chọn lý do --</option>
+                        <option value="duplicate">Tạo trùng hóa đơn</option>
+                        <option value="wrong-info">Thông tin sai</option>
+                        <option value="customer-cancel">Khách hàng hủy</option>
+                        <option value="technical-error">Lỗi hệ thống</option>
+                        <option value="other">Lý do khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú chi tiết</label>
+                    <textarea id="cancelNote" rows="4" style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px;" placeholder="Nhập chi tiết lý do hủy..."></textarea>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-danger" onclick="submitCancelRequest()">Xác nhận Hủy</button>
+                    <button class="btn btn-secondary" onclick="closeCancelModal()">Đóng</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Mở/Đóng Ca -->
+        <div id="shift" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Quản lý Ca làm việc</h2>
+            
+            <div class="form-section">
+                <h3>Trạng thái Ca hiện tại</h3>
+                <div style="text-align: center; padding: 20px;">
+                    <span class="shift-status shift-closed" id="shiftStatus">CA ĐANG ĐÓNG</span>
+                    <p style="margin-top: 15px; font-size: 16px;" id="shiftInfo">Chưa có ca làm việc nào được mở</p>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Mở Ca làm việc mới</h3>
+                <div class="form-group">
+                    <label>Tên thu ngân</label>
+                    <input type="text" id="cashierName" placeholder="Nhập tên thu ngân">
+                </div>
+                <div class="form-group">
+                    <label>Số tiền đầu ca (Quỹ tiền mặt ban đầu)</label>
+                    <input type="number" id="startingCash" placeholder="Nhập số tiền đầu ca">
+                </div>
+                <button class="btn btn-success" onclick="openShift()">🔓 MỞ CA</button>
+            </div>
+
+            <div class="form-section">
+                <h3>Đóng Ca làm việc</h3>
+                <div class="form-group">
+                    <label>Số tiền cuối ca (Thực tế)</label>
+                    <input type="number" id="endingCash" placeholder="Nhập số tiền thực tế">
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <input type="text" id="shiftNote" placeholder="Ghi chú về ca làm việc">
+                </div>
+                <button class="btn btn-danger" onclick="closeShift()">🔒 ĐÓNG CA</button>
+            </div>
+        </div>
+
+        <!-- Tab 4: Báo cáo Thu chi -->
+        <div id="report" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Báo cáo Thu chi</h2>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Từ ngày</label>
+                    <input type="date" id="reportFrom">
+                </div>
+                <div class="form-group">
+                    <label>Đến ngày</label>
+                    <input type="date" id="reportTo">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="generateReport()">📊 Xem báo cáo</button>
+
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 20px;">Tổng quan Thu chi</h3>
+                <div class="grid-2">
+                    <div style="background: #d4edda; padding: 25px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 16px; color: #155724; margin-bottom: 10px;">TỔNG THU</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #155724;">5,250,000 đ</div>
+                    </div>
+                    <div style="background: #f8d7da; padding: 25px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 16px; color: #721c24; margin-bottom: 10px;">TỔNG CHI</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #721c24;">1,500,000 đ</div>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 10px; text-align: center; margin-top: 20px; color: white;">
+                    <div style="font-size: 16px; margin-bottom: 10px;">LỢI NHUẬN THUẦN</div>
+                    <div style="font-size: 36px; font-weight: bold;">3,750,000 đ</div>
+                </div>
+
+                <table style="margin-top: 30px;">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Số giao dịch</th>
+                            <th>Tổng thu</th>
+                            <th>Tổng chi</th>
+                            <th>Lợi nhuận</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>22/11/2025</td>
+                            <td>15</td>
+                            <td>2,500,000 đ</td>
+                            <td>700,000 đ</td>
+                            <td>1,800,000 đ</td>
+                        </tr>
+                        <tr>
+                            <td>21/11/2025</td>
+                            <td>12</td>
+                            <td>1,850,000 đ</td>
+                            <td>500,000 đ</td>
+                            <td>1,350,000 đ</td>
+                        </tr>
+                        <tr>
+                            <td>20/11/2025</td>
+                            <td>10</td>
+                            <td>900,000 đ</td>
+                            <td>300,000 đ</td>
+                            <td>600,000 đ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu lưu trong bộ nhớ
+        let currentInvoice = null;
+        let currentShift = null;
+        let transactions = [];
+        let totalAmount = 1000000;
+        let discountAmount = 0;
+        let finalAmount = 1000000;
+
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function loadInvoice() {
+            const orderId = document.getElementById('orderId').value;
+            if (!orderId) {
+                alert('Vui lòng nhập mã đơn hàng!');
+                return;
+            }
+            
+            document.getElementById('invoiceDetails').style.display = 'block';
+            currentInvoice = {
+                orderId: orderId,
+                products: [
+                    {name: 'Sản phẩm A', qty: 2, price: 500000},
+                    {name: 'Sản phẩm B', qty: 1, price: 300000},
+                    {name: 'Dịch vụ C', qty: 1, price: 200000}
+                ],
+                total: 1000000
+            };
+            
+            calculateTotal();
+        }
+
+        function applyDiscount() {
+            const promoCode = document.getElementById('promoCode').value;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            
+            if (promoCode) {
+                alert('Đã áp dụng mã khuyến mãi: ' + promoCode);
+            }
+            
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            discountAmount = totalAmount * (discount / 100);
+            finalAmount = totalAmount - discountAmount;
+            
+            document.getElementById('totalAmount').innerHTML = 'TỔNG TIỀN: ' + formatCurrency(totalAmount);
+            document.getElementById('finalAmount').innerHTML = 'PHẢI THANH TOÁN: ' + formatCurrency(finalAmount);
+        }
+
+        function togglePayment(type) {
+            const checkbox = document.getElementById('pay' + type.charAt(0).toUpperCase() + type.slice(1));
+            checkbox.checked = !checkbox.checked;
+            
+            const input = document.getElementById(type + 'Input');
+            if (checkbox.checked) {
+                input.style.display = 'block';
+                if (type === 'cash') {
+                    document.getElementById('cashAmount').value = finalAmount;
+                }
+            } else {
+                input.style.display = 'none';
+            }
+        }
+
+        function calculateChange() {
+            const cashGiven = parseFloat(document.getElementById('cashGiven').value) || 0;
+            const cashAmount = parseFloat(document.getElementById('cashAmount').value) || 0;
+            
+            if (cashGiven > 0 && cashAmount > 0) {
+                const change = cashGiven - cashAmount;
+                if (change >= 0) {
+                    document.getElementById('changeDisplay').style.display = 'block';
+                    document.getElementById('changeDisplay').innerHTML = 'TIỀN THỪA: ' + formatCurrency(change);
+                } else {
+                    alert('Số tiền khách đưa không đủ!');
+                }
+            }
+        }
+
+        function completeTransaction() {
+            if (!currentInvoice) {
+                alert('Vui lòng tải thông tin hóa đơn trước!');
+                return;
+            }
+            
+            const payCash = document.getElementById('payCash').checked;
+            const payCard = document.getElementById('payCard').checked;
+            const payTransfer = document.getElementById('payTransfer').checked;
+            
+            if (!payCash && !payCard && !payTransfer) {
+                alert('Vui lòng chọn phương thức thanh toán!');
+                return;
+            }
+            
+            let totalPaid = 0;
+            let paymentMethods = [];
+            
+            if (payCash) {
+                const cashAmount = parseFloat(document.getElementById('cashAmount').value) || 0;
+                totalPaid += cashAmount;
+                paymentMethods.push('Tiền mặt: ' + formatCurrency(cashAmount));
+            }
+            
+            if (payCard) {
+                const cardAmount = parseFloat(document.getElementById('cardAmount').value) || 0;
+                totalPaid += cardAmount;
+                paymentMethods.push('Thẻ: ' + formatCurrency(cardAmount));
+            }
+            
+            if (payTransfer) {
+                const transferAmount = parseFloat(document.getElementById('transferAmount').value) || 0;
+                totalPaid += transferAmount;
+                paymentMethods.push('Chuyển khoản: ' + formatCurrency(transferAmount));
+            }
+            
+            if (Math.abs(totalPaid - finalAmount) > 1) {
+                alert('Tổng số tiền thanh toán không khớp với số tiền phải trả!\nPhải trả: ' + formatCurrency(finalAmount) + '\nĐã nhận: ' + formatCurrency(totalPaid));
+                return;
+            }
+            
+            // Hiển thị hóa đơn
+            const now = new Date();
+            document.getElementById('invOrderId').textContent = currentInvoice.orderId;
+            document.getElementById('invDate').textContent = now.toLocaleString('vi-VN');
+            
+            let productsHTML = '';
+            currentInvoice.products.forEach(p => {
+                productsHTML += `<p>${p.name} x${p.qty}: ${formatCurrency(p.price)}</p>`;
+            });
+            document.getElementById('invProducts').innerHTML = productsHTML;
+            
+            document.getElementById('invTotal').textContent = formatCurrency(totalAmount);
+            document.getElementById('invDiscount').textContent = formatCurrency(discountAmount);
+            document.getElementById('invFinal').textContent = formatCurrency(finalAmount);
+            document.getElementById('invMethod').textContent = paymentMethods.join(', ');
+            
+            document.getElementById('invoicePreview').style.display = 'block';
+            
+            // Lưu giao dịch
+            transactions.push({
+                orderId: currentInvoice.orderId,
+                date: now,
+                amount: finalAmount,
+                paymentMethods: paymentMethods
+            });
+            
+            alert('✓ Giao dịch hoàn tất thành công!\n\nCảm ơn quý khách và hẹn gặp lại!');
+        }
+
+        function resetTransaction() {
+            if (confirm('Bạn có chắc muốn làm mới giao dịch?')) {
+                document.getElementById('orderId').value = '';
+                document.getElementById('customerId').value = '';
+                document.getElementById('memberPhone').value = '';
+                document.getElementById('promoCode').value = '';
+                document.getElementById('discount').value = '0';
+                document.getElementById('invoiceDetails').style.display = 'none';
+                document.getElementById('invoicePreview').style.display = 'none';
+                
+                document.getElementById('payCash').checked = false;
+                document.getElementById('payCard').checked = false;
+                document.getElementById('payTransfer').checked = false;
+                
+                document.getElementById('cashInput').style.display = 'none';
+                document.getElementById('cardInput').style.display = 'none';
+                document.getElementById('transferInput').style.display = 'none';
+                
+                currentInvoice = null;
+                totalAmount = 1000000;
+                discountAmount = 0;
+                finalAmount = 1000000;
+                
+                calculateTotal();
+            }
+        }
+
+        function openShift() {
+            const cashierName = document.getElementById('cashierName').value;
+            const startingCash = document.getElementById('startingCash').value;
+            
+            if (!cashierName || !startingCash) {
+                alert('Vui lòng nhập đầy đủ thông tin!');
+                return;
+            }
+            
+            currentShift = {
+                cashier: cashierName,
+                startingCash: parseFloat(startingCash),
+                startTime: new Date(),
+                transactions: []
+            };
+            
+            document.getElementById('shiftStatus').textContent = 'CA ĐANG MỞ';
+            document.getElementById('shiftStatus').className = 'shift-status shift-open';
+            document.getElementById('shiftInfo').textContent = `Thu ngân: ${cashierName} | Bắt đầu: ${currentShift.startTime.toLocaleString('vi-VN')}`;
+            
+            alert('✓ Đã mở ca làm việc thành công!');
+        }
+
+        function closeShift() {
+            if (!currentShift) {
+                alert('Chưa có ca làm việc nào được mở!');
+                return;
+            }
+            
+            const endingCash = document.getElementById('endingCash').value;
+            const note = document.getElementById('shiftNote').value;
+            
+            if (!endingCash) {
+                alert('Vui lòng nhập số tiền cuối ca!');
+                return;
+            }
+            
+            currentShift.endingCash = parseFloat(endingCash);
+            currentShift.endTime = new Date();
+            currentShift.note = note;
+            
+            const difference = currentShift.endingCash - currentShift.startingCash;
+            
+            alert(`✓ Đã đóng ca làm việc!\n\nThu ngân: ${currentShift.cashier}\nThời gian: ${currentShift.startTime.toLocaleString('vi-VN')} - ${currentShift.endTime.toLocaleString('vi-VN')}\nSố tiền đầu ca: ${formatCurrency(currentShift.startingCash)}\nSố tiền cuối ca: ${formatCurrency(currentShift.endingCash)}\nChênh lệch: ${formatCurrency(difference)}`);
+            
+            document.getElementById('shiftStatus').textContent = 'CA ĐANG ĐÓNG';
+            document.getElementById('shiftStatus').className = 'shift-status shift-closed';
+            document.getElementById('shiftInfo').textContent = 'Chưa có ca làm việc nào được mở';
+            
+            currentShift = null;
+            
+            document.getElementById('cashierName').value = '';
+            document.getElementById('startingCash').value = '';
+            document.getElementById('endingCash').value = '';
+            document.getElementById('shiftNote').value = '';
+        }
+
+        function generateReport() {
+            const from = document.getElementById('reportFrom').value;
+            const to = document.getElementById('reportTo').value;
+            
+            if (!from || !to) {
+                alert('Vui lòng chọn khoảng thời gian!');
+                return;
+            }
+            
+            alert('Đã tạo báo cáo từ ' + from + ' đến ' + to);
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(amount);
+        }
+
+        // Khởi tạo ngày mặc định cho báo cáo
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reportFrom').value = today;
+            document.getElementById('reportTo').value = today;
+        };
+    </script>
+</body>
+</html>
